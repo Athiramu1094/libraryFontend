@@ -1,9 +1,36 @@
-import React from 'react'
-import { Link, Outlet, useLocation } from 'react-router-dom';
+import axios from 'axios'
+import React, { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link, Outlet, useLocation } from 'react-router-dom'
+import { setUserLoggedIn } from '../features/login/loginSlice';
 
 
 function Root() {
     const location = useLocation();
+    const navigate = useNavigate(); 
+    const userLoggedIn = useSelector(state =>
+      state.login.userLoggedIn 
+      
+    )
+    const dispatch = useDispatch() 
+  
+    useEffect(()=>{
+      axios.get(`http://localhost:3000/auth/verify`,{
+        withCredentials:true })
+        .then(response=>{
+          navigate('/')
+          dispatch(setUserLoggedIn(true))
+        })
+  
+        .catch(error=>{
+          dispatch(setUserLoggedIn(false))
+        })
+     
+      }, []); 
+  
+  
+  
     return (
     <>
     <header>
@@ -18,14 +45,19 @@ function Root() {
             <Link to="/books" className='navlink'>Books</Link>
             </li>
             <li>
-            <Link to="/contact" className='navlink'>Contact</Link>
+            <Link to="/signup" className='navlink'>SignUp</Link>
             </li>
-            <li>
-            <Link to="/logout" className='navlink'>Logout</Link>
+            {
+              userLoggedIn? <li>
+              <Link to="/logout" className='navlink'>Logout</Link>
+              </li> : <li>
+            <Link to="/login" className='navlink'>Login</Link>
             </li>
+            
+            }
             </ul>
         </nav>
-   </div>
+    </div>
     </header>
     {location.pathname === '/' && (
                 <img src="/coverpage.png.jpg" alt="Cover Page" />

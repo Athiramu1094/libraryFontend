@@ -7,11 +7,15 @@ import {
 import './index.css'
 import Home, {loader as homeLoader} from './routes/home';
 import Author, { loader as authorLoader } from './routes/author';
-
+import store from './app/store'
 import Root from './routes/root';
 import Books,{loader as booksLoader} from './routes/books';
 import Book,{loader as bookLoader} from './routes/book';
 import AllBooks, {loader as allBooksLoader} from './routes/allBooks';
+import SignUp from './routes/signup';
+import Login from './routes/login';
+import Logout from './routes/logout';
+import { Provider } from 'react-redux'
 
 const router = createBrowserRouter([
   {
@@ -47,7 +51,23 @@ const router = createBrowserRouter([
           path:"/book/:bookId",
           element:<Book/>,
           loader:bookLoader
-        }
+        },
+
+        {
+          path:"/signup",
+          element:<SignUp/>
+        },
+
+        {
+          path:"/login",
+          element:<Login/>
+        },
+  
+        {
+          path:"/logout",
+          element:<Logout/>
+        },
+  
       ]
   },
 ])
@@ -55,6 +75,8 @@ const router = createBrowserRouter([
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+  <Provider store={store}>
+      <RouterProvider router={router} />
+      </Provider>,
   </React.StrictMode>,
 )
